@@ -45,12 +45,21 @@ const STORAGE_KEYS = {
   theme: 'spendsense_theme_v1',
 };
 
-function loadFromStorage<T>(key: string, fallback: () => T): T {
+function loadArrayFromStorage<T>(
+  key: string,
+  fallback: () => T[],
+  validateItem?: (item: unknown) => boolean
+): T[] {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return fallback();
-    const parsed = JSON.parse(raw) as T;
-    return parsed;
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return fallback();
+    if (validateItem) {
+      const valid = parsed.filter(validateItem);
+      return valid.length > 0 || parsed.length === 0 ? (valid as T[]) : fallback();
+    }
+    return parsed as T[];
   } catch {
     return fallback();
   }
@@ -58,20 +67,46 @@ function loadFromStorage<T>(key: string, fallback: () => T): T {
 
 export default function App() {
   const [transactions, setTransactions] = useState<Transaction[]>(() =>
-    loadFromStorage(STORAGE_KEYS.transactions, createSampleTransactions)
+    loadArrayFromStorage(
+      STORAGE_KEYS.transactions,
+      createSampleTransactions,
+      (item): boolean =>
+        typeof item === 'object' &&
+        item !== null &&
+        typeof (item as Transaction).id === 'string' &&
+        typeof (item as Transaction).amount === 'number' &&
+        Number.isFinite((item as Transaction).amount) &&
+        typeof (item as Transaction).date === 'string'
+    )
   );
   const [budgets, setBudgets] = useState<Budget[]>(() =>
-    loadFromStorage(STORAGE_KEYS.budgets, () => SAMPLE_BUDGETS)
+    loadArrayFromStorage(
+      STORAGE_KEYS.budgets,
+      () => SAMPLE_BUDGETS,
+      (item): boolean =>
+        typeof item === 'object' &&
+        item !== null &&
+        typeof (item as Budget).category === 'string' &&
+        typeof (item as Budget).limit === 'number'
+    )
   );
   const [goals, setGoals] = useState<SavingsGoal[]>(() =>
-    loadFromStorage(STORAGE_KEYS.goals, createSampleGoals)
+    loadArrayFromStorage(
+      STORAGE_KEYS.goals,
+      createSampleGoals,
+      (item): boolean =>
+        typeof item === 'object' &&
+        item !== null &&
+        typeof (item as SavingsGoal).id === 'string' &&
+        typeof (item as SavingsGoal).targetAmount === 'number'
+    )
   );
   const [isDark, setIsDark] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.theme);
       if (saved === 'dark') return true;
       if (saved === 'light') return false;
-      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+      return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
     } catch {
       return false;
     }

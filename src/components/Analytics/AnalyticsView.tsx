@@ -192,7 +192,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         <div className="h-72 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={180}>
             <AreaChart
               data={dailySeries}
               margin={{ top: 8, right: 12, left: -6, bottom: 0 }}
@@ -308,7 +308,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           </p>
 
           <div className="h-60 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={180}>
               <BarChart
                 data={trendData}
                 margin={{ top: 4, right: 8, left: -8, bottom: 0 }}

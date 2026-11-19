@@ -1,8 +1,9 @@
 import { Transaction } from '../types/finance';
 
 export function formatINR(amount: number, compact = false): string {
-  const abs = Math.abs(amount);
-  const sign = amount < 0 ? '-' : '';
+  const safeAmount = Number.isFinite(amount) ? amount : 0;
+  const abs = Math.abs(safeAmount);
+  const sign = safeAmount < 0 ? '-' : '';
 
   if (compact) {
     if (abs >= 10000000) {
@@ -24,6 +25,7 @@ export function formatINR(amount: number, compact = false): string {
 }
 
 export function formatDate(dateStr: string): string {
+  if (!dateStr || typeof dateStr !== 'string') return '';
   const [year, month, day] = dateStr.split('-').map(Number);
   if (!year || !month || !day) return dateStr;
   const date = new Date(year, month - 1, day);
@@ -35,6 +37,7 @@ export function formatDate(dateStr: string): string {
 }
 
 export function formatShortDate(dateStr: string): string {
+  if (!dateStr || typeof dateStr !== 'string') return '';
   const [year, month, day] = dateStr.split('-').map(Number);
   if (!year || !month || !day) return dateStr;
   const date = new Date(year, month - 1, day);
@@ -45,10 +48,12 @@ export function formatShortDate(dateStr: string): string {
 }
 
 export function getMonthKey(dateStr: string): string {
+  if (!dateStr || typeof dateStr !== 'string') return getCurrentMonthKey();
   return dateStr.slice(0, 7); // YYYY-MM
 }
 
 export function formatMonthLabel(monthKey: string, short = false): string {
+  if (!monthKey || typeof monthKey !== 'string') return '';
   const [year, month] = monthKey.split('-').map(Number);
   if (!year || !month) return monthKey;
   const date = new Date(year, month - 1, 1);
@@ -74,7 +79,9 @@ export function getTodayISO(): string {
 }
 
 export function shiftMonthKey(monthKey: string, offset: number): string {
+  if (!monthKey || typeof monthKey !== 'string') return getCurrentMonthKey();
   const [year, month] = monthKey.split('-').map(Number);
+  if (!year || !month) return getCurrentMonthKey();
   const date = new Date(year, month - 1 + offset, 1);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }

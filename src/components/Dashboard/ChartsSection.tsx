@@ -157,7 +157,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
         </div>
 
         <div className="h-72 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={180}>
             <BarChart
               data={trendData}
               margin={{ top: 4, right: 8, left: -8, bottom: 0 }}
@@ -244,7 +244,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
         {categoryBreakdown.length > 0 ? (
           <div className="flex-1 flex flex-col justify-between gap-4">
             <div className="relative h-52 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={180}>
                 <PieChart>
                   <Pie
                     data={categoryBreakdown}
