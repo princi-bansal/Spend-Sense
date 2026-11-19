@@ -1,0 +1,6 @@
+{
+  "name": "SpendSense",
+  "description": "SpendSense – Make Every Rupee Count. A modern personal finance, budgeting, savings goals, and spending analytics dashboard in Indian Rupees (₹).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
