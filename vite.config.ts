@@ -4,9 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({mode}) => {
   return {
-    base: './',
+    base: mode === 'production' ? '/Spend-Sense/' : '/',
     plugins: [
       react(),
       tailwindcss(),
